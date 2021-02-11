@@ -1,5 +1,6 @@
 package com.yuqiong.college.common.handler;
 
+import com.yuqiong.college.common.utils.ExceptionUtil;
 import com.yuqiong.college.common.utils.ResultData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,10 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public ResultData error(GuliException e) {
-        log.error(e.getMessage());
+        log.error(ExceptionUtil.getMessage(e));
         e.printStackTrace();
         return ResultData.error().message(e.getMessage()).code(e.getCode());
     }

@@ -25,6 +25,7 @@ import java.util.List;
 @Api("讲师模块")
 @RestController
 @RequestMapping("/edu/teacher")
+@CrossOrigin
 public class TeacherController {
 
     @Autowired
@@ -58,11 +59,11 @@ public class TeacherController {
     }
 
     @ApiOperation(value = "分页查询讲师列表")
-    @GetMapping("{page}/{limit}")
+    @PostMapping("{page}/{limit}")
     public ResultData pageList(
             @ApiParam(name = "page", value = "第几页", required = true) @PathVariable("page") Long page,
             @ApiParam(name = "limit", value = "每页的个数", required = true) @PathVariable("limit") Long limit,
-            @ApiParam(name = "teacherQuery", value = "查询对象", required = false) TeacherQuery teacherQuery) {
+            @ApiParam(name = "teacherQuery", value = "查询对象", required = false) @RequestBody(required = false) TeacherQuery teacherQuery) {
         Page<Teacher> teacherPage = new Page<Teacher>(page, limit);
         teacherService.pageQuery(teacherPage, teacherQuery);
         long total = teacherPage.getTotal();//总数据
