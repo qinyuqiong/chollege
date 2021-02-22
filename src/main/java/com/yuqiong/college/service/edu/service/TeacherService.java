@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yuqiong.college.service.edu.entity.Teacher;
 import com.yuqiong.college.service.edu.query.TeacherQuery;
 
+import java.util.List;
+
 /**
  * <p>
  * 讲师 服务类
@@ -16,4 +18,6 @@ import com.yuqiong.college.service.edu.query.TeacherQuery;
 public interface TeacherService extends IService<Teacher> {
 
     void pageQuery(Page<Teacher> teacherPage, TeacherQuery teacherQuery);
+
+    List<Teacher> getList();
 }

@@ -1,5 +1,6 @@
 package com.yuqiong.college.service.edu.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuqiong.college.common.handler.GuliException;
 import com.yuqiong.college.service.edu.entity.Course;
@@ -13,7 +14,10 @@ import com.yuqiong.college.service.edu.service.CourseService;
 import com.yuqiong.college.service.edu.service.VideoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -103,6 +107,16 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         if (i == 0) {
             throw new GuliException(20001, "删除失败");
         }
+    }
+
+    @Override
+    @Cacheable(value = "CourseList", key = "'selectIndexFront'")
+    public List<Course> getList() {
+        QueryWrapper<Course> queryWrapper = new QueryWrapper();
+        queryWrapper.orderByDesc("id");
+        queryWrapper.last("limit 8");
+        List<Course> list = this.list(queryWrapper);
+        return list;
     }
 
 

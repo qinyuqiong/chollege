@@ -8,7 +8,10 @@ import com.yuqiong.college.service.edu.entity.Teacher;
 import com.yuqiong.college.service.edu.mapper.TeacherMapper;
 import com.yuqiong.college.service.edu.query.TeacherQuery;
 import com.yuqiong.college.service.edu.service.TeacherService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -49,5 +52,15 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         queryWrapper.orderByDesc("gmt_create");
         baseMapper.selectPage(teacherPage, queryWrapper);
 
+    }
+
+    @Override
+    @Cacheable(value = "teacherList", key = "'selectTeacher'")
+    public List<Teacher> getList() {
+        QueryWrapper<Teacher> queryWrapper1 = new QueryWrapper();
+        queryWrapper1.orderByDesc("id");
+        queryWrapper1.last("limit 4");
+        List<Teacher> list1 = this.list(queryWrapper1);
+        return list1;
     }
 }
