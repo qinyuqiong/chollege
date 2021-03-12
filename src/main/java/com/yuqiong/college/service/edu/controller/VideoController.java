@@ -1,6 +1,12 @@
 package com.yuqiong.college.service.edu.controller;
 
 
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.vod.model.v20170321.GetVideoPlayAuthRequest;
+import com.aliyuncs.vod.model.v20170321.GetVideoPlayAuthResponse;
+import com.yuqiong.college.common.handler.GuliException;
+import com.yuqiong.college.common.utils.ConstantPropertiesUtils;
+import com.yuqiong.college.common.utils.InitVodCilent;
 import com.yuqiong.college.common.utils.ResultData;
 import com.yuqiong.college.service.edu.entity.Video;
 import com.yuqiong.college.service.edu.service.VideoService;
@@ -28,6 +34,25 @@ public class VideoController {
 
     @Autowired
     private VideoService videoService;
+
+    @ApiOperation(value = "视频播放")
+    @GetMapping("getPlayAuth/{id}")
+    public ResultData getPlayAuth(@PathVariable String id) {
+        try {
+            //创建初始化对象
+            DefaultAcsClient client = InitVodCilent.initVodClient(ConstantPropertiesUtils.KEY_ID, ConstantPropertiesUtils.KEY_SECRET);
+            //创建获取凭证request和response对象
+            GetVideoPlayAuthRequest request = new GetVideoPlayAuthRequest();
+            //向request设置视频id
+            request.setVideoId(id);
+            //调用方法得到凭证
+            GetVideoPlayAuthResponse response = client.getAcsResponse(request);
+            String playAuth = response.getPlayAuth();
+            return ResultData.ok().data("playAuth", playAuth);
+        } catch (Exception e) {
+            throw new GuliException(20001, "获取凭证失败");
+        }
+    }
 
     @ApiOperation(value = "添加小节")
     @PostMapping("addVideo")

@@ -1,13 +1,17 @@
 package com.yuqiong.college.service.edu.controller;
 
 
+import com.yuqiong.college.common.utils.JwtUtils;
 import com.yuqiong.college.common.utils.ResultData;
+import com.yuqiong.college.service.edu.entity.UcenterMember;
 import com.yuqiong.college.service.edu.entity.chapter.RegisterVo;
 import com.yuqiong.college.service.edu.service.UcenterMemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -48,5 +52,25 @@ public class UcenterMemberController {
         ucenterMemberService.register(registerVo);
         return ResultData.ok();
     }
+
+    @PostMapping("login")
+    @ApiOperation(value = "登录")
+    public ResultData loginUser(@RequestBody UcenterMember ucenterMember) {
+        String token = ucenterMemberService.login(ucenterMember);
+        return ResultData.ok().data("token", token);
+
+    }
+
+    //根据token获取用户信息
+    @GetMapping("getMemberInfo")
+    @ApiOperation(value = "根据token获取用户信息")
+    public ResultData getMemberInfo(HttpServletRequest request) {
+        //调用jwt工具类的方法。根据request对象获取头信息，返回用户id
+        String memberId = JwtUtils.getMemberIdByJwtToken(request);
+        //查询数据库根据用户id获取用户信息
+        UcenterMember member = ucenterMemberService.getById(memberId);
+        return ResultData.ok().data("userInfo", member);
+    }
+
 }
 

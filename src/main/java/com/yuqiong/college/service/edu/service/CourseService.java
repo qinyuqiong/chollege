@@ -3,9 +3,11 @@ package com.yuqiong.college.service.edu.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yuqiong.college.service.edu.entity.Course;
 import com.yuqiong.college.service.edu.entity.CoursePublishVo;
+import com.yuqiong.college.service.edu.entity.chapter.CourseQueryVo;
 import com.yuqiong.college.service.edu.query.CourseInfoVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -28,4 +30,6 @@ public interface CourseService extends IService<Course> {
     void removeCourse(String id);
 
     List<Course> getList();
+
+    Map<String, Object> getFrontCourseList(long page, long limit, CourseQueryVo queryVo);
 }

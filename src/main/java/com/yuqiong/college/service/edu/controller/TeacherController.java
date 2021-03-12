@@ -1,10 +1,13 @@
 package com.yuqiong.college.service.edu.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yuqiong.college.common.utils.ResultData;
+import com.yuqiong.college.service.edu.entity.Course;
 import com.yuqiong.college.service.edu.entity.Teacher;
 import com.yuqiong.college.service.edu.query.TeacherQuery;
+import com.yuqiong.college.service.edu.service.CourseService;
 import com.yuqiong.college.service.edu.service.TeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -30,6 +34,29 @@ public class TeacherController {
 
     @Autowired
     private TeacherService teacherService;
+
+    @Autowired
+    private CourseService courseService;
+
+    @ApiOperation(value = "显示讲师详情")
+    @GetMapping("getTeacherFrontInfo/{teacherId}")
+    public ResultData getTeacherFrontInfo(@PathVariable String teacherId) {
+        //1 根据讲师id查询讲师基本信息
+        Teacher byId = teacherService.getById(teacherId);
+        //2 根据讲师id查询所讲课程
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("teacher_id", teacherId);
+        List<Course> list = courseService.list(queryWrapper);
+        return ResultData.ok().data("teacher", byId).data("courseList", list);
+    }
+
+    @ApiOperation(value = "分页查询")
+    @PostMapping("getTeacherFrontList/{page}/{limit}")
+    public ResultData getTeacherFrontList(@PathVariable long page, @PathVariable long limit) {
+        Page<Teacher> teacherPage = new Page<>(page, limit);
+        Map<String, Object> teacherMap = teacherService.getTeacherFrontList(teacherPage);
+        return ResultData.ok().data(teacherMap);
+    }
 
     @ApiOperation(value = "根据id修改")
     @PostMapping("updateTeacher")

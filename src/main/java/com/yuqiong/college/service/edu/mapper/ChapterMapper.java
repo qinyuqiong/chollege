@@ -2,6 +2,7 @@ package com.yuqiong.college.service.edu.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yuqiong.college.service.edu.entity.Chapter;
+import com.yuqiong.college.service.edu.query.CourseWebVo;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.yuqiong.college.service.edu.entity.Chapter;
  */
 public interface ChapterMapper extends BaseMapper<Chapter> {
 
+    CourseWebVo getBaseCourseInfo(String courseId);
 }

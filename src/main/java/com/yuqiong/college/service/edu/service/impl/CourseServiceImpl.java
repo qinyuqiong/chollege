@@ -1,23 +1,28 @@
 package com.yuqiong.college.service.edu.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yuqiong.college.common.handler.GuliException;
 import com.yuqiong.college.service.edu.entity.Course;
 import com.yuqiong.college.service.edu.entity.CourseDescription;
 import com.yuqiong.college.service.edu.entity.CoursePublishVo;
+import com.yuqiong.college.service.edu.entity.chapter.CourseQueryVo;
 import com.yuqiong.college.service.edu.mapper.CourseMapper;
 import com.yuqiong.college.service.edu.query.CourseInfoVo;
 import com.yuqiong.college.service.edu.service.ChapterService;
 import com.yuqiong.college.service.edu.service.CourseDescriptionService;
 import com.yuqiong.college.service.edu.service.CourseService;
 import com.yuqiong.college.service.edu.service.VideoService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -117,6 +122,43 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         queryWrapper.last("limit 8");
         List<Course> list = this.list(queryWrapper);
         return list;
+    }
+
+    @Override
+    public Map<String, Object> getFrontCourseList(long page, long limit, CourseQueryVo queryVo) {
+        Page<Course> coursePage = new Page<>(page, limit);
+        QueryWrapper<Course> courseQueryWrapper = new QueryWrapper<>();
+        if (!StringUtils.isEmpty(queryVo.getSubjectParentId())) {
+            courseQueryWrapper.eq("subject_parent_id", queryVo.getSubjectParentId());
+        }
+        if (!StringUtils.isEmpty(queryVo.getSubjectId())) {
+            courseQueryWrapper.eq("subject_id", queryVo.getSubjectId());
+        }
+        if (!StringUtils.isEmpty(queryVo.getBuyCountSort())) {
+            courseQueryWrapper.orderByDesc("buy_count");
+        }
+        if (!StringUtils.isEmpty(queryVo.getPriceSort())) {
+            courseQueryWrapper.orderByDesc("price");
+        }
+        baseMapper.selectPage(coursePage, courseQueryWrapper);
+
+        List<Course> records = coursePage.getRecords();
+        long current = coursePage.getCurrent();
+        long pages = coursePage.getPages();
+        long size = coursePage.getSize();
+        long total = coursePage.getTotal();
+        boolean hasNext = coursePage.hasNext();
+        boolean hasPrevious = coursePage.hasPrevious();
+        Map<String, Object> map = new HashMap<>();
+        map.put("items", records);
+        map.put("current", current);
+        map.put("pages", pages);
+        map.put("size", size);
+        map.put("total", total);
+        map.put("hasNext", hasNext);
+        map.put("hasPrevious", hasPrevious);
+
+        return map;
     }
 
 

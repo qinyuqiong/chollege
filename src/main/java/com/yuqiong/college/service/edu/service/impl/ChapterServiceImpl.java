@@ -8,6 +8,7 @@ import com.yuqiong.college.service.edu.entity.Video;
 import com.yuqiong.college.service.edu.entity.chapter.ChapterVO;
 import com.yuqiong.college.service.edu.entity.chapter.VideoVo;
 import com.yuqiong.college.service.edu.mapper.ChapterMapper;
+import com.yuqiong.college.service.edu.query.CourseWebVo;
 import com.yuqiong.college.service.edu.service.ChapterService;
 import com.yuqiong.college.service.edu.service.VideoService;
 import org.springframework.beans.BeanUtils;
@@ -83,5 +84,10 @@ public class ChapterServiceImpl extends ServiceImpl<ChapterMapper, Chapter> impl
         QueryWrapper<Chapter> videoQueryWrapper = new QueryWrapper<>();
         videoQueryWrapper.eq("course_id", courseId);
         baseMapper.delete(videoQueryWrapper);
+    }
+
+    @Override
+    public CourseWebVo getBaseCourseInfo(String courseId) {
+        return baseMapper.getBaseCourseInfo(courseId);
     }
 }

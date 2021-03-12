@@ -11,7 +11,9 @@ import com.yuqiong.college.service.edu.service.TeacherService;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -62,5 +64,22 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         queryWrapper1.last("limit 4");
         List<Teacher> list1 = this.list(queryWrapper1);
         return list1;
+    }
+
+    @Override
+    public Map<String, Object> getTeacherFrontList(Page<Teacher> teacherPage) {
+        QueryWrapper<Teacher> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByAsc("id");
+        baseMapper.selectPage(teacherPage, queryWrapper);
+
+        Map<String, Object> teacherMap = new HashMap<>(7);
+        teacherMap.put("records", teacherPage.getRecords());
+        teacherMap.put("total", teacherPage.getTotal());
+        teacherMap.put("pages", teacherPage.getPages());
+        teacherMap.put("size", teacherPage.getSize());
+        teacherMap.put("current", teacherPage.getCurrent());
+        teacherMap.put("hasNext", teacherPage.hasNext());
+        teacherMap.put("hasPrevious", teacherPage.hasPrevious());
+        return teacherMap;
     }
 }

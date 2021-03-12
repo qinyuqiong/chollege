@@ -6,6 +6,7 @@ import com.yuqiong.college.service.edu.entity.Teacher;
 import com.yuqiong.college.service.edu.query.TeacherQuery;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -20,4 +21,6 @@ public interface TeacherService extends IService<Teacher> {
     void pageQuery(Page<Teacher> teacherPage, TeacherQuery teacherQuery);
 
     List<Teacher> getList();
+
+    Map<String, Object> getTeacherFrontList(Page<Teacher> teacherPage);
 }

@@ -15,4 +15,6 @@ import com.yuqiong.college.service.edu.entity.chapter.RegisterVo;
 public interface UcenterMemberService extends IService<UcenterMember> {
 
     void register(RegisterVo registerVo);
+
+    String login(UcenterMember ucenterMember);
 }

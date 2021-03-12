@@ -4,7 +4,11 @@ package com.yuqiong.college.service.edu.controller;
 import com.yuqiong.college.common.utils.ResultData;
 import com.yuqiong.college.service.edu.entity.Course;
 import com.yuqiong.college.service.edu.entity.CoursePublishVo;
+import com.yuqiong.college.service.edu.entity.chapter.ChapterVO;
+import com.yuqiong.college.service.edu.entity.chapter.CourseQueryVo;
 import com.yuqiong.college.service.edu.query.CourseInfoVo;
+import com.yuqiong.college.service.edu.query.CourseWebVo;
+import com.yuqiong.college.service.edu.service.ChapterService;
 import com.yuqiong.college.service.edu.service.CourseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -29,6 +34,27 @@ public class CourseController {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private ChapterService chapterService;
+
+    @ApiOperation(value = "课程详情")
+    @GetMapping("getFrontCourseInfo/{courseId}")
+    public ResultData getFrontCourseInfo(@PathVariable String courseId) {
+        CourseWebVo courseWebVo = chapterService.getBaseCourseInfo(courseId);
+        List<ChapterVO> chapterVideoByCourseId = chapterService.getChapterVideoByCourseId(courseId);
+        return ResultData.ok().data("courseWebVo", courseWebVo).data("chapterVideoList", chapterVideoByCourseId);
+
+    }
+
+    @ApiOperation(value = "条件查询带分页查询")
+    @PostMapping("getFrontCourseList/{page}/{limit}")
+    public ResultData getFrontCourseList(@PathVariable long page, @PathVariable long limit, @RequestBody(required = false) CourseQueryVo queryVo) {
+
+        Map<String, Object> map = courseService.getFrontCourseList(page, limit, queryVo);
+        return ResultData.ok().data(map);
+
+    }
 
     @ApiOperation(value = "删除所有课程")
     @DeleteMapping("removeCourse/{courseId}")
