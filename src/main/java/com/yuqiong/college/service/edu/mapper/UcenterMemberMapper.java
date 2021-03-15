@@ -13,4 +13,5 @@ import com.yuqiong.college.service.edu.entity.UcenterMember;
  */
 public interface UcenterMemberMapper extends BaseMapper<UcenterMember> {
 
+    Integer countRegister(String day);
 }

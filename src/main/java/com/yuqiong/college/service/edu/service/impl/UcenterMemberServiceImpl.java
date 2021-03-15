@@ -91,4 +91,9 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
         return jwtToken;
 
     }
+
+    @Override
+    public Integer countRegister(String day) {
+        return baseMapper.countRegister(day);
+    }
 }
